@@ -1,0 +1,7 @@
+# Copyright by AcmaTvirus
+node_modules
+dist
+.env
+.agent
+*.log
+docker-compose.override.yml

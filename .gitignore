@@ -1,0 +1,67 @@
+# Copyright by AcmaTvirus
+# Dependencies - Các thư mục phụ thuộc
+node_modules/
+dist/
+build/
+.agent/
+
+
+# Debug logs - Các bản nhật ký lỗi
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# Environment variables - Biến môi trường (TUYỆT ĐỐI BẢO MẬT)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.php
+.env.bak
+*.env
+
+# Secrets & Credentials - Chứng chỉ và mã bí mật
+secrets/
+private/
+*.pem
+*.key
+*.pub
+*.cert
+*.pfx
+*.p12
+credentials.json
+client_secret.json
+service-account.json
+
+# Database & Storage - Cơ sở dữ liệu và lưu trữ
+*.sql
+*.sqlite
+*.db
+*.dump
+storage/*.key
+
+# IDE & Editor files - Các tệp cấu hình trình soạn thảo
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.settings/
+.vscode/*.log
+
+# OS generated files - Các tệp của hệ điều hành
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# Deployment - Các tệp triển khai
+deployment/secrets/
+docker-compose.override.yml

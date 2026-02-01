@@ -1,0 +1,32 @@
+{
+  "name": "virtual-house",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node src/manager.ts",
+    "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/manager.ts",
+    "deploy": "ts-node src/deploy-commands.ts",
+    "db-init": "ts-node db-init.ts",
+    "build": "tsc",
+    "clear-commands": "ts-node src/clear-commands.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "discord-hybrid-sharding": "^3.0.1",
+    "discord.js": "^14.25.1",
+    "dotenv": "^17.2.3",
+    "pg": "^8.18.0",
+    "redis": "^5.10.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.1.0",
+    "@types/pg": "^8.16.0",
+    "@types/redis": "^4.0.10",
+    "nodemon": "^3.1.11",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
