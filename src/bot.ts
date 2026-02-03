@@ -5,6 +5,8 @@ import dotenv from 'dotenv';
 import { GameService, LAND_TYPES } from './services/gameService';
 import { NotificationService } from './utils/webhook';
 
+import { deployCommands } from './deploy-commands';
+
 dotenv.config();
 
 const client = new Client({
@@ -20,13 +22,24 @@ const client = new Client({
 // @ts-ignore
 client.cluster = new ClusterClient(client);
 
-client.on('ready', () => {
+client.on('ready', async () => {
     // @ts-ignore
     console.log(`[Bot] Cluster ${client.cluster.id} Ready! Logged in as: ${client.user?.tag}`);
+
+    // Tự động đăng ký Global Commands khi khởi động để đảm bảo đồng bộ
+    if (process.env.CLIENT_ID && process.env.DISCORD_TOKEN) {
+        await deployCommands(process.env.CLIENT_ID, process.env.DISCORD_TOKEN);
+    }
 });
 
 client.on('guildCreate', async (guild) => {
+    console.log(`[Bot] Joined new guild: ${guild.name} (${guild.id})`);
     await NotificationService.notifyNewServer(guild);
+
+    // Đăng ký lệnh ngay lập tức cho Server mới tham gia
+    if (process.env.CLIENT_ID && process.env.DISCORD_TOKEN) {
+        await deployCommands(process.env.CLIENT_ID, process.env.DISCORD_TOKEN, guild.id);
+    }
 });
 
 client.on('interactionCreate', async (interaction: Interaction) => {

@@ -1,10 +1,7 @@
 // Copyright by AcmaTvirus
 import { REST, Routes, SlashCommandBuilder } from 'discord.js';
-import dotenv from 'dotenv';
 
-dotenv.config();
-
-const commands = [
+export const slashCommands = [
     // Economics commands
     new SlashCommandBuilder()
         .setName('work')
@@ -46,30 +43,49 @@ const commands = [
     new SlashCommandBuilder()
         .setName('profile')
         .setDescription('View your account balance and stats'),
+
+    new SlashCommandBuilder()
+        .setName('menu')
+        .setDescription('Show the main interaction menu'),
 ].map(command => command.toJSON());
 
-const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN!);
-
-(async () => {
+export async function deployCommands(clientId: string, token: string, guildId?: string) {
+    const rest = new REST({ version: '10' }).setToken(token);
     try {
-        console.log(`Started refreshing ${commands.length} application (/) commands.`);
-
-        if (process.env.GUILD_ID) {
-            console.log('Registering commands to Guild ID:', process.env.GUILD_ID);
+        if (guildId) {
+            console.log(`[Deploy] Registering commands for Guild: ${guildId}`);
             await rest.put(
-                Routes.applicationGuildCommands(process.env.CLIENT_ID!, process.env.GUILD_ID),
-                { body: commands },
+                Routes.applicationGuildCommands(clientId, guildId),
+                { body: slashCommands },
             );
-            console.log('Successfully reloaded application (/) commands (Guild).');
         } else {
-            console.log('Registering Global commands...');
+            console.log(`[Deploy] Registering Global commands...`);
             await rest.put(
-                Routes.applicationCommands(process.env.CLIENT_ID!),
-                { body: commands },
+                Routes.applicationCommands(clientId),
+                { body: slashCommands },
             );
-            console.log('Successfully reloaded application (/) commands (Global).');
         }
+        return { success: true };
     } catch (error) {
-        console.error('Error while registering commands:', error);
+        console.error('[Deploy] Error:', error);
+        return { success: false, error };
     }
-})();
+}
+
+// Cho phép chạy độc lập từ lệnh 'npm run deploy'
+if (require.main === module) {
+    const dotenv = require('dotenv');
+    dotenv.config();
+
+    const clientId = process.env.CLIENT_ID;
+    const token = process.env.DISCORD_TOKEN;
+    const guildId = process.env.GUILD_ID;
+
+    if (clientId && token) {
+        deployCommands(clientId, token, guildId).then(result => {
+            if (result.success) console.log('✅ Deployment complete!');
+        });
+    } else {
+        console.error('❌ Missing CLIENT_ID or DISCORD_TOKEN in .env');
+    }
+}
